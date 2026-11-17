@@ -1,0 +1,1818 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f2eb">
+  <meta name="description" content="A daily operating system for embodied practice, clear ambition, and Trika philosophy.">
+  <title>Shakti / Sovereign — Daily Practice</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #0b0c10;
+      --panel: #14161d;
+      --panel-raised: #191c24;
+      --panel-soft: #101218;
+      --line: #292c35;
+      --text: #f2f0e9;
+      --muted: #9a9ba3;
+      --gold: #d4af37;
+      --gold-soft: #f0d98a;
+      --crimson: #b83227;
+      --crimson-soft: #e38172;
+      --green: #83b98e;
+      --sans: Inter, "Avenir Next", "Segoe UI", sans-serif;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --radius: 16px;
+      --content: 1160px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 86px; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 82% 4%, rgb(184 50 39 / 8%), transparent 29rem),
+        radial-gradient(ellipse at 6% 14%, rgb(212 175 55 / 7%), transparent 31rem),
+        var(--ink);
+      color: var(--text);
+      font: 15px/1.65 var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, textarea { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; }
+    button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+    .wrap { width: min(var(--content), calc(100% - 48px)); margin-inline: auto; }
+    .serif { font-family: var(--serif); }
+    .eyebrow {
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+    .muted { color: var(--muted); }
+    .gold { color: var(--gold); }
+    .crimson { color: var(--crimson-soft); }
+    .section { padding: 104px 0; border-top: 1px solid rgb(255 255 255 / 5%); }
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 30px;
+      margin-bottom: 36px;
+    }
+    .section-heading h2 {
+      margin: 8px 0 0;
+      font: 500 clamp(32px, 5vw, 48px)/1.14 var(--serif);
+      letter-spacing: -.025em;
+    }
+    .section-heading > p { max-width: 430px; margin: 0; color: var(--muted); }
+
+    .topbar {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      border-bottom: 1px solid rgb(255 255 255 / 7%);
+      background: rgb(11 12 16 / 88%);
+      backdrop-filter: blur(18px);
+    }
+    .nav {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: .1em;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .brand-mark {
+      display: grid;
+      width: 28px;
+      aspect-ratio: 1;
+      place-items: center;
+      color: var(--gold);
+      border: 1px solid rgb(212 175 55 / 60%);
+      transform: rotate(45deg);
+      font-size: 14px;
+    }
+    .brand-mark span { transform: rotate(-45deg); }
+    .nav-links { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 30px); }
+    .nav-links a {
+      color: #b4b4ba;
+      font-size: 12px;
+      text-decoration: none;
+      transition: color .2s ease;
+    }
+    .nav-links a:hover { color: var(--gold-soft); }
+    .nav-cta, .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid rgb(212 175 55 / 50%);
+      border-radius: 7px;
+      background: rgb(212 175 55 / 8%);
+      color: var(--gold-soft);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .2s ease, border-color .2s ease, transform .2s ease;
+    }
+    .nav-cta:hover, .button:hover { background: rgb(212 175 55 / 15%); border-color: var(--gold); }
+    .button:active { transform: translateY(1px); }
+    .button.primary { background: var(--gold); border-color: var(--gold); color: #17140a; }
+    .button.primary:hover { background: var(--gold-soft); }
+    .button.subtle { border-color: var(--line); background: transparent; color: var(--muted); }
+    .button.subtle:hover { border-color: #555966; color: var(--text); }
+    .button.danger { border-color: rgb(184 50 39 / 55%); background: rgb(184 50 39 / 8%); color: var(--crimson-soft); }
+    .button.danger:hover { background: rgb(184 50 39 / 17%); }
+    .button:disabled { opacity: .48; cursor: not-allowed; }
+
+    .hero { padding: 82px 0 96px; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 285px; gap: 60px; align-items: end; }
+    .hero h1 {
+      max-width: 810px;
+      margin: 16px 0 22px;
+      font: 500 clamp(48px, 8vw, 82px)/1.02 var(--serif);
+      letter-spacing: -.045em;
+    }
+    .hero h1 em { color: var(--gold); font-weight: 500; }
+    .hero-copy { max-width: 690px; color: #b7b7bf; font-size: 17px; }
+    .hero-copy strong { color: var(--text); font-weight: 600; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .hero-aside {
+      position: relative;
+      padding: 26px 24px;
+      border: 1px solid var(--line);
+      border-top-color: rgb(212 175 55 / 55%);
+      background: linear-gradient(145deg, rgb(212 175 55 / 5%), transparent 70%), var(--panel);
+    }
+    .hero-aside .stat { display: block; margin: 5px 0; color: var(--gold); font: 500 54px/1 var(--serif); }
+    .hero-aside p { margin: 14px 0 0; color: var(--muted); font-size: 13px; }
+    .hero-aside .date-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+    .rule-note { max-width: 770px; margin-top: 34px; padding-left: 14px; border-left: 2px solid var(--crimson); color: #858791; font-size: 12px; }
+
+    .paradigm { padding-top: 70px; }
+    .segmented {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #101116;
+    }
+    .segmented button {
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 5px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .segmented button[aria-pressed="true"] { background: #292b31; color: var(--text); }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .compare-card {
+      min-height: 272px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      transition: border-color .2s ease, opacity .2s ease;
+    }
+    .compare-card.ascetic { border-top: 2px solid #747780; }
+    .compare-card.sovereign { border-top: 2px solid var(--gold); background: linear-gradient(135deg, rgb(212 175 55 / 5%), transparent 55%), var(--panel); }
+    .compare-card h3 { margin: 14px 0 4px; font: 500 27px/1.25 var(--serif); }
+    .compare-card blockquote { margin: 10px 0 14px; font: italic 19px/1.4 var(--serif); color: #e8e4d7; }
+    .compare-card p { margin: 0; color: var(--muted); font-size: 13px; }
+    .compare-card .pill { display: inline-flex; padding: 4px 8px; border: 1px solid var(--line); border-radius: 99px; color: #a7a9b0; font-size: 10px; }
+    .paradigm-foot {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 15px;
+      align-items: start;
+      margin-top: 18px;
+      padding: 22px;
+      border: 1px solid rgb(184 50 39 / 25%);
+      border-radius: 12px;
+      background: rgb(184 50 39 / 5%);
+    }
+    .paradigm-foot .sigil { color: var(--crimson-soft); font: 28px var(--serif); }
+    .paradigm-foot p { margin: 0; color: #c1bdbe; font-size: 13px; }
+    .paradigm-foot strong { color: var(--text); }
+
+    .concept-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .concept-card {
+      min-height: 216px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+    .concept-card .index { color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: .12em; }
+    .concept-card h3 { margin: 13px 0 8px; font: 500 22px/1.2 var(--serif); }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 13px; }
+    .concept-card.wide { grid-column: span 2; }
+    .upaya-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 17px; }
+    .upaya-list div { padding: 12px; border: 1px solid #2b2e37; background: #111319; }
+    .upaya-list b { display: block; margin-bottom: 3px; color: var(--gold-soft); font-size: 12px; }
+    .upaya-list span { color: var(--muted); font-size: 11px; }
+    .principle-note { margin: 18px 0 0; color: #888b94; font-size: 12px; }
+
+    .practice-section { background: linear-gradient(180deg, rgb(20 22 29 / 30%), transparent 36%); }
+    .dashboard-top { display: grid; grid-template-columns: 1fr 240px; gap: 22px; align-items: stretch; margin-bottom: 18px; }
+    .progress-card, .streak-card {
+      padding: 22px 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+    .progress-line { display: flex; justify-content: space-between; gap: 15px; margin-bottom: 13px; font-size: 13px; }
+    .progress-line span:last-child { color: var(--gold-soft); font-weight: 700; }
+    .progress-track { height: 7px; overflow: hidden; border-radius: 9px; background: #292b32; }
+    .progress-fill { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--crimson), var(--gold)); transition: width .35s ease; }
+    .streak-card { display: flex; align-items: center; gap: 14px; }
+    .streak-icon { display: grid; width: 46px; aspect-ratio: 1; place-items: center; border: 1px solid rgb(212 175 55 / 40%); border-radius: 50%; color: var(--gold); font-size: 21px; }
+    .streak-count { color: var(--gold-soft); font: 500 34px/.95 var(--serif); }
+    .streak-card small { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; }
+    .dashboard-actions { display: flex; justify-content: flex-end; margin-bottom: 28px; }
+    .phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .phase-card {
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+    .phase-card.phase-wide { grid-column: 1 / -1; }
+    .phase-head { display: flex; justify-content: space-between; gap: 15px; align-items: start; margin-bottom: 18px; }
+    .phase-head h3 { margin: 6px 0 0; font: 500 25px/1.2 var(--serif); }
+    .phase-time { flex: 0 0 auto; padding: 5px 9px; border: 1px solid var(--line); border-radius: 99px; color: var(--muted); font-size: 10px; }
+    .phase-intro { margin: -6px 0 18px; color: var(--muted); font-size: 13px; }
+    .field-label { display: block; margin-bottom: 7px; color: #d4d1c9; font-size: 12px; font-weight: 600; }
+    textarea, input[type="text"] {
+      width: 100%;
+      border: 1px solid #31343e;
+      border-radius: 7px;
+      background: #101218;
+      color: var(--text);
+    }
+    textarea { min-height: 83px; padding: 12px; resize: vertical; }
+    input[type="text"] { min-height: 42px; padding: 0 12px; }
+    textarea::placeholder, input::placeholder { color: #666973; }
+    .saved-note { min-height: 17px; margin: 5px 0 0; color: #777a83; font-size: 10px; }
+    .timer-box {
+      margin: 18px 0;
+      padding: 18px;
+      border: 1px solid #2d303a;
+      border-radius: 12px;
+      background: #101218;
+      text-align: center;
+    }
+    .timer-display { color: var(--gold-soft); font: 500 44px/.95 var(--serif); font-variant-numeric: tabular-nums; }
+    .timer-caption { min-height: 24px; margin-top: 9px; color: var(--muted); font-size: 12px; }
+    .timer-caption strong { color: #e9e3ce; }
+    .timer-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 14px; }
+    .timer-actions .button { min-height: 36px; padding-inline: 13px; font-size: 11px; }
+    .breath-orb {
+      display: grid;
+      width: 70px;
+      height: 70px;
+      margin: 16px auto 0;
+      place-items: center;
+      border: 1px solid rgb(212 175 55 / 50%);
+      border-radius: 50%;
+      color: var(--gold-soft);
+      background: rgb(212 175 55 / 6%);
+      transition: transform 1s ease-in-out, box-shadow 1s ease-in-out;
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .breath-orb.inhale { transform: scale(1.16); box-shadow: 0 0 30px rgb(212 175 55 / 13%); }
+    .breath-orb.exhale { transform: scale(.88); }
+    .breath-orb.pause { box-shadow: 0 0 24px rgb(212 175 55 / 17%); }
+    .micro-copy { color: var(--muted); font-size: 12px; }
+    .micro-copy strong { color: var(--text); }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 16px 0; }
+    .step {
+      padding: 11px 10px;
+      border: 1px solid #2c2f38;
+      border-radius: 8px;
+      color: #92949c;
+      font-size: 10px;
+      transition: .2s ease;
+    }
+    .step b { display: block; margin-bottom: 4px; color: #b9bbc2; font-size: 11px; }
+    .step.active { border-color: rgb(212 175 55 / 65%); background: rgb(212 175 55 / 6%); color: #d4d0c4; }
+    .step.active b { color: var(--gold-soft); }
+    .step.done { border-color: rgb(131 185 142 / 40%); color: #8db598; }
+    .step.done b { color: var(--green); }
+    .log-row { display: grid; grid-template-columns: 130px 1fr; gap: 10px; }
+    .select-control {
+      width: 100%;
+      min-height: 42px;
+      padding: 0 10px;
+      border: 1px solid #31343e;
+      border-radius: 7px;
+      background: #101218;
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+    }
+    .check-list { display: grid; gap: 10px; }
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 12px 13px;
+      border: 1px solid #2b2e37;
+      border-radius: 8px;
+      background: #111319;
+      cursor: pointer;
+    }
+    .check-row:hover { border-color: #494c56; }
+    .check-row input { flex: 0 0 auto; width: 16px; height: 16px; margin: 3px 0 0; accent-color: var(--gold); }
+    .check-row span { color: #c2c2c8; font-size: 12px; }
+    .check-row small { display: block; margin-top: 2px; color: #858892; font-size: 11px; }
+    .phase-footer { display: flex; align-items: center; gap: 10px; margin-top: 16px; color: var(--muted); font-size: 11px; }
+    .phase-footer input { accent-color: var(--gold); }
+    .review-prompt { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+    .review-prompt label { color: #d4d1c9; font-size: 12px; font-weight: 600; }
+    .review-prompt textarea { display: block; margin-top: 7px; }
+    .notice { margin: 16px 0 0; padding: 12px 14px; border-left: 2px solid var(--gold); background: rgb(212 175 55 / 5%); color: #a9a9b0; font-size: 11px; }
+
+    .reading-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 18px; }
+    .draw-card, .books-card { padding: 28px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+    .draw-card { min-height: 335px; background: radial-gradient(ellipse at 100% 0%, rgb(212 175 55 / 7%), transparent 45%), var(--panel); }
+    .draw-head { display: flex; justify-content: space-between; align-items: center; gap: 15px; }
+    .draw-head .button { min-height: 36px; font-size: 11px; }
+    .dharana-number { margin: 30px 0 2px; color: var(--gold); font: 500 15px var(--serif); letter-spacing: .05em; }
+    .dharana-title { margin: 7px 0 12px; font: 500 29px/1.22 var(--serif); }
+    .dharana-text { max-width: 540px; color: #b1b1b8; font-size: 14px; }
+    .dharana-practice { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--line); color: #898c94; font-size: 11px; }
+    .books-card h3 { margin: 2px 0 18px; font: 500 25px var(--serif); }
+    .book-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+    .book-list li { padding: 14px 0; border-top: 1px solid #2b2e37; }
+    .book-list b { display: block; color: #e2e0d9; font-size: 13px; }
+    .book-list span { color: var(--muted); font-size: 11px; }
+    .source-note { margin-top: 18px; color: #777a83; font-size: 10px; }
+    footer { padding: 26px 0 40px; border-top: 1px solid rgb(255 255 255 / 6%); color: #72757e; font-size: 11px; }
+    .footer-row { display: flex; justify-content: space-between; gap: 20px; }
+    .toast {
+      position: fixed;
+      z-index: 50;
+      right: 24px;
+      bottom: 24px;
+      max-width: min(360px, calc(100% - 48px));
+      padding: 12px 16px;
+      border: 1px solid #41434b;
+      border-radius: 8px;
+      background: #1b1d24;
+      color: var(--text);
+      box-shadow: 0 12px 35px rgb(0 0 0 / 35%);
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: .2s ease;
+      font-size: 12px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 840px) {
+      .hero-grid { grid-template-columns: 1fr 225px; gap: 28px; }
+      .concept-grid { grid-template-columns: repeat(2, 1fr); }
+      .concept-card.wide { grid-column: span 2; }
+      .upaya-list { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { gap: 13px; }
+      .nav-links a { font-size: 11px; }
+    }
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 32px, var(--content)); }
+      .nav { min-height: 60px; }
+      .nav-links { display: none; }
+      .hero { padding: 61px 0 70px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 30px; }
+      .hero h1 { font-size: clamp(46px, 14vw, 66px); }
+      .hero-copy { font-size: 15px; }
+      .hero-aside { max-width: 320px; }
+      .section { padding: 76px 0; }
+      .section-heading { align-items: start; flex-direction: column; gap: 14px; margin-bottom: 26px; }
+      .comparison, .dashboard-top, .phase-grid, .reading-grid { grid-template-columns: 1fr; }
+      .compare-card { min-height: initial; }
+      .concept-grid { grid-template-columns: 1fr; }
+      .concept-card.wide { grid-column: auto; }
+      .concept-card { min-height: initial; }
+      .phase-card.phase-wide { grid-column: auto; }
+      .phase-card { padding: 21px; }
+      .dashboard-actions { margin-top: -6px; }
+      .dashboard-actions .button { width: 100%; }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .review-prompt { grid-template-columns: 1fr; }
+      .log-row { grid-template-columns: 1fr; }
+      .draw-card, .books-card { padding: 22px; }
+      .footer-row { flex-direction: column; }
+      .paradigm { padding-top: 60px; }
+      .segmented { width: 100%; }
+      .segmented button { flex: 1; padding-inline: 6px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+
+    :root {
+      --ink: #0a0b0e;
+      --panel: #121419;
+      --panel-raised: #181a20;
+      --panel-soft: #0e1014;
+      --line: #292b31;
+      --text: #f3efe6;
+      --muted: #9c9ba0;
+      --gold: #d3b46b;
+      --gold-soft: #ecd9a4;
+      --crimson: #a6463b;
+      --crimson-soft: #d98679;
+      --radius: 14px;
+      --content: 1200px;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 86% 9%, rgb(148 58 47 / 10%), transparent 34rem),
+        radial-gradient(ellipse at 4% 2%, rgb(185 148 72 / 8%), transparent 38rem),
+        var(--ink);
+      letter-spacing: -.012em;
+    }
+    .wrap { width: min(var(--content), calc(100% - 64px)); }
+    .topbar { background: rgb(10 11 14 / 84%); border-color: rgb(255 255 255 / 8%); }
+    .nav { min-height: 72px; }
+    .brand { letter-spacing: .13em; }
+    .brand-mark { border-radius: 2px; }
+    .nav-links a { position: relative; padding: 8px 0; color: #b7b3aa; }
+    .nav-links a::after {
+      position: absolute;
+      right: 0;
+      bottom: 1px;
+      left: 0;
+      height: 1px;
+      background: var(--gold);
+      content: "";
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .2s ease;
+    }
+    .nav-links a:hover::after, .nav-links a:focus-visible::after { transform: scaleX(1); }
+    .nav-cta, .button { border-radius: 5px; letter-spacing: .005em; }
+    .button.primary { box-shadow: 0 5px 18px rgb(211 180 107 / 12%); }
+
+    .hero {
+      position: relative;
+      padding: clamp(66px, 8vw, 104px) 0 clamp(58px, 7vw, 82px);
+      isolation: isolate;
+    }
+    .hero::after {
+      position: absolute;
+      z-index: -1;
+      top: 50%;
+      right: 5%;
+      width: clamp(280px, 34vw, 470px);
+      aspect-ratio: 1;
+      border: 1px solid rgb(211 180 107 / 8%);
+      border-radius: 50%;
+      content: "";
+      transform: translateY(-46%);
+      box-shadow: 0 0 0 42px rgb(211 180 107 / 2%), 0 0 0 96px rgb(211 180 107 / 1%);
+      pointer-events: none;
+    }
+    .hero-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: clamp(34px, 6vw, 78px); align-items: center; }
+    .hero h1 {
+      max-width: 760px;
+      margin: 20px 0 22px;
+      font-size: clamp(48px, 6.7vw, 78px);
+      line-height: 1.04;
+      letter-spacing: -.055em;
+    }
+    .hero h1 em { font-style: italic; }
+    .hero-copy { max-width: 650px; color: #b3b0aa; font-size: 16px; line-height: 1.8; }
+    .hero-actions { margin-top: 30px; }
+    .hero-aside {
+      padding: 26px;
+      border: 1px solid #34312a;
+      border-top-color: var(--gold);
+      border-radius: 4px;
+      background: linear-gradient(155deg, rgb(211 180 107 / 7%), transparent 52%), rgb(18 20 25 / 92%);
+      box-shadow: 0 22px 70px rgb(0 0 0 / 19%);
+    }
+    .hero-aside .stat { margin: 14px 0 10px; font-size: 68px; letter-spacing: -.06em; }
+    .hero-aside p { font-size: 12px; line-height: 1.75; }
+    .rule-note { max-width: 800px; margin-top: 42px; color: #a09da0; line-height: 1.75; }
+
+    .section { padding: clamp(76px, 8vw, 108px) 0; border-top-color: rgb(255 255 255 / 7%); }
+    .paradigm { padding-top: clamp(62px, 7vw, 86px); }
+    .section-heading { margin-bottom: 30px; }
+    .section-heading h2 { font-size: clamp(34px, 4vw, 46px); letter-spacing: -.04em; }
+    .section-heading > p { max-width: 460px; font-size: 13px; line-height: 1.8; }
+    .eyebrow { letter-spacing: .15em; }
+
+    .comparison { gap: 18px; }
+    .compare-card {
+      position: relative;
+      min-height: 260px;
+      padding: clamp(24px, 3vw, 34px);
+      overflow: hidden;
+      border-radius: 5px;
+      background: linear-gradient(135deg, rgb(255 255 255 / 2%), transparent 60%), var(--panel);
+      transition: transform .25s ease, border-color .25s ease, background-color .25s ease;
+    }
+    .compare-card:hover { transform: translateY(-3px); border-color: #44444a; }
+    .compare-card.ascetic { border-top: 1px solid #55565d; }
+    .compare-card.sovereign { border-top: 1px solid var(--gold); }
+    .compare-card h3 { margin-top: 18px; font-size: 29px; }
+    .compare-card blockquote { max-width: 440px; color: var(--gold-soft); font-size: clamp(19px, 2vw, 24px); }
+    .compare-card.ascetic blockquote { color: #d5d1c9; }
+    .compare-card p { max-width: 560px; line-height: 1.8; }
+    .compare-card .pill { border-color: #3a3b40; color: #b4b1aa; letter-spacing: .1em; }
+    .paradigm-foot {
+      margin-top: 18px;
+      padding: 22px 24px;
+      border: 1px solid rgb(166 70 59 / 26%);
+      border-radius: 5px;
+      background: linear-gradient(100deg, rgb(166 70 59 / 8%), transparent 80%);
+    }
+    .paradigm-foot p { line-height: 1.85; }
+    .principle-note { max-width: 900px; color: #85848a; line-height: 1.75; }
+    .segmented { border-radius: 5px; background: #101115; }
+    .segmented button { min-height: 34px; padding-inline: 14px; border-radius: 3px; }
+    .segmented button[aria-pressed="true"] { background: #292a2e; color: var(--gold-soft); }
+
+    .concept-grid { gap: 12px; }
+    .concept-card {
+      position: relative;
+      min-height: 208px;
+      padding: 24px;
+      overflow: hidden;
+      border-radius: 5px;
+      background: linear-gradient(145deg, rgb(255 255 255 / 2%), transparent 65%), var(--panel);
+      transition: border-color .2s ease, transform .2s ease;
+    }
+    .concept-card:hover { transform: translateY(-2px); border-color: #46464d; }
+    .concept-card .index { color: #c5a960; }
+    .concept-card h3 { font-size: 23px; }
+    .concept-card p { line-height: 1.8; }
+    .concept-card.wide { background: linear-gradient(125deg, rgb(211 180 107 / 5%), transparent 55%), var(--panel); }
+    .upaya-list { gap: 8px; }
+    .upaya-list div { border-color: #303137; background: #111318; }
+    .upaya-list span { line-height: 1.6; }
+
+    .practice-section { background: linear-gradient(180deg, rgb(255 255 255 / 1.5%), transparent 38%); }
+    .dashboard-top { grid-template-columns: 1fr 220px; gap: 12px; margin-bottom: 12px; }
+    .progress-card, .streak-card {
+      border-color: #303137;
+      border-radius: 5px;
+      background: #121419;
+    }
+    .progress-card { padding: 20px 22px; }
+    .progress-line { font-size: 12px; }
+    .progress-line span:first-child { color: #c5c2bb; }
+    .progress-line span:last-child { color: var(--gold-soft); font-variant-numeric: tabular-nums; }
+    .progress-track { height: 5px; background: #2b2c31; }
+    .progress-fill { background: linear-gradient(90deg, #a6463b, #d3b46b); }
+    .streak-card { gap: 12px; padding: 17px 20px; }
+    .streak-icon { width: 40px; border-color: rgb(211 180 107 / 32%); color: var(--gold-soft); }
+    .streak-count { font-size: 31px; }
+    .dashboard-actions { margin-bottom: 18px; }
+    .dashboard-actions .button { min-height: 34px; padding-inline: 12px; font-size: 10px; }
+    .phase-grid { gap: 12px; align-items: start; }
+    .phase-card {
+      position: relative;
+      padding: clamp(20px, 2.5vw, 28px);
+      border-color: #303137;
+      border-radius: 5px;
+      background: linear-gradient(150deg, rgb(255 255 255 / 2%), transparent 65%), #121419;
+      box-shadow: 0 12px 32px rgb(0 0 0 / 10%);
+    }
+    .phase-card:nth-child(odd) { border-top: 1px solid rgb(211 180 107 / 38%); }
+    .phase-card:nth-child(even) { border-top: 1px solid rgb(166 70 59 / 45%); }
+    .phase-head { margin-bottom: 14px; }
+    .phase-head h3 { font-size: 24px; }
+    .phase-time { border-color: #37373b; border-radius: 3px; color: #b0adb0; letter-spacing: .1em; }
+    .phase-intro { line-height: 1.75; }
+    .field-label { color: #dedbd4; }
+    textarea, input[type="text"], .select-control {
+      border-color: #34353b;
+      border-radius: 4px;
+      background: #0d0f13;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    textarea:focus, input[type="text"]:focus, .select-control:focus {
+      border-color: rgb(211 180 107 / 75%);
+      box-shadow: 0 0 0 3px rgb(211 180 107 / 8%);
+    }
+    textarea { line-height: 1.65; }
+    .timer-box {
+      padding: 18px;
+      border-color: #2e3036;
+      border-radius: 5px;
+      background: linear-gradient(145deg, rgb(211 180 107 / 3%), transparent 55%), #0e1014;
+    }
+    .timer-display { margin-top: 8px; font-size: 48px; letter-spacing: -.04em; }
+    .timer-caption { line-height: 1.65; }
+    .timer-actions .button { border-radius: 4px; }
+    .breath-orb { border-color: rgb(211 180 107 / 54%); background: radial-gradient(circle, rgb(211 180 107 / 10%), transparent 72%); }
+    .steps { gap: 6px; }
+    .step { border-radius: 4px; line-height: 1.5; }
+    .step.active { border-color: rgb(211 180 107 / 65%); background: rgb(211 180 107 / 7%); }
+    .check-row {
+      padding: 13px;
+      border-color: #2c2e34;
+      border-radius: 4px;
+      background: #101217;
+      transition: border-color .2s ease, background .2s ease;
+    }
+    .check-row:hover { border-color: #55524a; background: #14161b; }
+    .check-row input { accent-color: var(--gold); }
+    .check-row:has(input:checked) { border-color: rgb(131 185 142 / 35%); background: rgb(131 185 142 / 4%); }
+    .check-row:has(input:checked) span b { color: #b5d2b9; }
+    .saved-note { color: #8d8c92; }
+    .phase-footer { align-items: flex-start; line-height: 1.7; }
+    .notice { border-left-color: var(--gold); background: linear-gradient(90deg, rgb(211 180 107 / 6%), transparent); line-height: 1.75; }
+
+    .draw-card, .books-card {
+      border-color: #303137;
+      border-radius: 5px;
+      background-color: #121419;
+    }
+    .draw-card {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 92% 18%, rgb(211 180 107 / 8%), transparent 15rem),
+        linear-gradient(145deg, rgb(255 255 255 / 2%), transparent 70%),
+        #121419;
+    }
+    .draw-card::after {
+      position: absolute;
+      right: -56px;
+      bottom: -96px;
+      width: 220px;
+      aspect-ratio: 1;
+      border: 1px solid rgb(211 180 107 / 10%);
+      border-radius: 50%;
+      content: "";
+      box-shadow: 0 0 0 22px rgb(211 180 107 / 2%), 0 0 0 48px rgb(211 180 107 / 1%);
+      pointer-events: none;
+    }
+    .dharana-number { color: var(--gold-soft); letter-spacing: .12em; }
+    .dharana-title { max-width: 480px; font-size: clamp(28px, 3vw, 36px); letter-spacing: -.03em; }
+    .dharana-text { line-height: 1.8; }
+    .dharana-practice { position: relative; z-index: 1; line-height: 1.8; }
+    .books-card h3 { font-size: 27px; }
+    .book-list li { border-top-color: #303137; }
+    .book-list b { margin-bottom: 3px; }
+    .book-list span { display: block; line-height: 1.65; }
+    footer { border-top-color: rgb(255 255 255 / 8%); }
+
+    @media (max-width: 840px) {
+      .wrap { width: min(var(--content), calc(100% - 44px)); }
+      .hero-grid { grid-template-columns: minmax(0, 1fr) 230px; gap: 28px; }
+      .hero h1 { font-size: clamp(48px, 7vw, 64px); }
+      .nav { gap: 16px; }
+      .nav-links { gap: 14px; }
+      .nav-links a { font-size: 10px; }
+      .nav-cta { padding-inline: 12px; font-size: 10px; }
+    }
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 36px, var(--content)); }
+      .hero-grid, .dashboard-top { grid-template-columns: 1fr; }
+      .hero-grid { gap: 25px; }
+      .nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        min-height: 0;
+        gap: 0 10px;
+        padding-block: 11px 0;
+      }
+      .brand { gap: 8px; font-size: 10px; }
+      .brand-mark { width: 24px; }
+      .nav-cta { min-height: 34px; padding-inline: 9px; font-size: 9px; }
+      .nav-links {
+        display: flex;
+        grid-column: 1 / -1;
+        grid-row: 2;
+        width: 100%;
+        margin: 7px 0 0;
+        padding: 0;
+        gap: 22px;
+        overflow-x: auto;
+        border-top: 1px solid rgb(255 255 255 / 6%);
+        scrollbar-width: none;
+      }
+      .nav-links::-webkit-scrollbar { display: none; }
+      .nav-links a { flex: 0 0 auto; padding: 10px 0 11px; font-size: 11px; }
+      .hero { padding: 56px 0 62px; }
+      .hero::after { top: 22%; right: -34%; width: 300px; opacity: .6; }
+      .hero-grid { grid-template-columns: 1fr; gap: 27px; }
+      .hero h1 { margin-top: 16px; font-size: clamp(46px, 12vw, 62px); }
+      .hero-copy { font-size: 14px; line-height: 1.8; }
+      .hero-aside { max-width: none; padding: 20px 22px; }
+      .hero-aside .date-label { display: block; }
+      .hero-aside .stat { display: inline-block; margin: 9px 13px 4px 0; font-size: 47px; vertical-align: middle; }
+      .hero-aside .eyebrow { display: inline-block; max-width: 145px; vertical-align: middle; }
+      .hero-aside p { margin-top: 8px; }
+      .rule-note { margin-top: 24px; font-size: 11px; }
+      .section { padding: 68px 0; }
+      .section-heading { margin-bottom: 24px; }
+      .section-heading h2 { font-size: 35px; }
+      .section-heading > p { font-size: 12px; }
+      .paradigm { padding-top: 58px; }
+      .comparison, .dashboard-top, .phase-grid, .reading-grid { grid-template-columns: 1fr; }
+      .compare-card { min-height: initial; padding: 23px; }
+      .compare-card h3 { font-size: 25px; }
+      .segmented { width: 100%; }
+      .segmented button { flex: 1; padding-inline: 5px; font-size: 10px; }
+      .paradigm-foot { grid-template-columns: 30px 1fr; gap: 10px; padding: 17px; }
+      .concept-grid { grid-template-columns: 1fr; }
+      .concept-card, .concept-card.wide { grid-column: auto; min-height: initial; padding: 21px; }
+      .upaya-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .dashboard-top { gap: 9px; }
+      .progress-card { padding: 17px; }
+      .streak-card { min-height: 68px; }
+      .dashboard-actions { margin: 0 0 14px; }
+      .dashboard-actions .button { width: auto; }
+      .phase-card { padding: 19px; }
+      .phase-head h3 { font-size: 22px; }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .review-prompt { grid-template-columns: 1fr; }
+      .log-row { grid-template-columns: 1fr; }
+      .draw-card, .books-card { padding: 21px; }
+      .draw-card { min-height: initial; }
+      .dharana-number { margin-top: 24px; }
+      .footer-row { flex-direction: column; }
+      .toast { right: 18px; bottom: 18px; }
+      .hero { overflow: clip; }
+      .draw-card::after { display: none; }
+    }
+
+    :root {
+      color-scheme: light;
+      --ink: #f4f2eb;
+      --panel: #fffefa;
+      --panel-raised: #ffffff;
+      --panel-soft: #ebe9e1;
+      --line: #deddd3;
+      --text: #202b26;
+      --muted: #68746d;
+      --gold: #245c4b;
+      --gold-soft: #1d503f;
+      --crimson: #bd6349;
+      --crimson-soft: #a64e37;
+      --green: #2e7058;
+      --sans: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+      --serif: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+      --radius: 12px;
+      --content: 1160px;
+    }
+
+    body {
+      background: var(--ink);
+      color: var(--text);
+      font: 15px/1.65 var(--sans);
+      letter-spacing: 0;
+    }
+    .wrap { width: min(var(--content), calc(100% - 48px)); }
+    html { scroll-padding-top: 82px; }
+    button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+      outline-color: var(--gold);
+    }
+    .topbar {
+      border-bottom-color: #e5e3db;
+      background: rgb(250 249 245 / 92%);
+      box-shadow: 0 3px 14px rgb(34 44 38 / 4%);
+    }
+    .nav { min-height: 70px; }
+    .brand { color: #23332c; font-size: 11px; letter-spacing: .11em; }
+    .brand-mark {
+      width: 31px;
+      border: 0;
+      border-radius: 9px;
+      background: #e5eee7;
+      color: #245c4b;
+      transform: none;
+    }
+    .brand-mark span { display: grid; place-items: center; transform: none; }
+    .brand-mark svg { width: 20px; height: 20px; }
+    .gold { color: var(--gold); }
+    .nav-links a { color: #59665f; font-size: 12px; }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a::after { background: var(--gold); }
+    .nav-cta, .button {
+      min-height: 41px;
+      border: 1px solid #245c4b;
+      border-radius: 6px;
+      background: transparent;
+      color: #245c4b;
+      font-size: 12px;
+      font-weight: 650;
+      transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+    }
+    .nav-cta:hover, .button:hover { border-color: #174535; background: #e8f0ea; color: #174535; }
+    .button.primary { border-color: #245c4b; background: #245c4b; color: #fffefa; box-shadow: none; }
+    .button.primary:hover { border-color: #174535; background: #174535; color: #fffefa; }
+    .button.subtle { border-color: #c9cfc8; background: transparent; color: #43544a; }
+    .button.subtle:hover { border-color: #96a79a; background: #edf1ea; color: #263d31; }
+    .button.danger { border-color: #d8b8aa; background: #fbf2ee; color: #984b37; }
+    .button.danger:hover { border-color: #c68973; background: #f7e7e0; color: #803b29; }
+
+    .hero {
+      overflow: hidden;
+      padding: clamp(56px, 7vw, 88px) 0 76px;
+      isolation: isolate;
+    }
+    .hero::after {
+      top: 45%;
+      right: -2%;
+      width: clamp(260px, 30vw, 390px);
+      border: 1px solid rgb(36 92 75 / 10%);
+      box-shadow: 0 0 0 32px rgb(36 92 75 / 3%), 0 0 0 72px rgb(36 92 75 / 2%);
+      opacity: .8;
+    }
+    .hero-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: clamp(34px, 6vw, 72px); }
+    .eyebrow { color: #38745e; font-size: 10px; letter-spacing: .14em; }
+    .hero h1 {
+      max-width: 760px;
+      margin: 18px 0 20px;
+      color: #1d2923;
+      font: 700 clamp(46px, 6.3vw, 76px)/1.07 var(--sans);
+      letter-spacing: -.065em;
+    }
+    .hero h1 em { color: #b75a41; font-style: normal; font-weight: 600; }
+    .hero-copy { max-width: 645px; color: #58675f; font-size: 15px; line-height: 1.85; }
+    .hero-copy strong { color: #26372e; font-weight: 700; }
+    .hero-aside {
+      padding: 23px;
+      border: 1px solid #dce5dc;
+      border-top: 3px solid #36745d;
+      border-radius: 10px;
+      background: #eaf0e9;
+      box-shadow: 0 14px 36px rgb(34 59 45 / 6%);
+    }
+    .hero-aside .date-label { color: #65756a; }
+    .hero-aside .stat { color: #245c4b; font: 700 60px/1 var(--sans); letter-spacing: -.07em; }
+    .hero-aside .eyebrow { color: #386e57; font-size: 9px; }
+    .hero-aside p { color: #536258; font-size: 12px; line-height: 1.8; }
+    .rule-note { max-width: 800px; border-left-color: #bd6349; color: #68736c; font-size: 11px; line-height: 1.8; }
+
+    .section { border-top-color: #e7e5dd; }
+    .section-heading h2 {
+      color: #233029;
+      font: 650 clamp(30px, 4vw, 43px)/1.18 var(--sans);
+      letter-spacing: -.045em;
+    }
+    .section-heading > p { color: #68746d; font-size: 13px; line-height: 1.8; }
+    .comparison { gap: 14px; }
+    .compare-card {
+      min-height: 245px;
+      padding: clamp(22px, 3vw, 31px);
+      border: 1px solid #e1e1d8;
+      border-radius: 10px;
+      background: #fffefa;
+      box-shadow: 0 8px 26px rgb(35 48 41 / 3%);
+    }
+    .compare-card:hover { border-color: #c5d0c7; }
+    .compare-card.ascetic { border-top: 3px solid #b5b9b3; background: #faf9f5; }
+    .compare-card.sovereign { border-top: 3px solid #36745d; background: linear-gradient(140deg, #edf3ec, #fffefa 75%); }
+    .compare-card .pill { border-color: #d8ddd5; color: #68736d; font-size: 9px; letter-spacing: .1em; }
+    .compare-card h3 { color: #26352d; font: 650 24px/1.3 var(--sans); letter-spacing: -.035em; }
+    .compare-card blockquote { color: #a74e39; font: 600 clamp(18px, 2vw, 22px)/1.45 var(--sans); letter-spacing: -.025em; }
+    .compare-card.ascetic blockquote { color: #58665e; }
+    .compare-card p { color: #667169; font-size: 12px; line-height: 1.8; }
+    .paradigm-foot {
+      grid-template-columns: 42px 1fr;
+      border: 1px solid #ead8cf;
+      border-radius: 9px;
+      background: #f8eee8;
+    }
+    .paradigm-foot .sigil { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #f0ddd3; color: #a64e37; }
+    .sigil svg { width: 21px; height: 21px; }
+    .paradigm-foot p { color: #5f5c55; font-size: 12px; line-height: 1.85; }
+    .paradigm-foot strong { color: #303b33; }
+    .principle-note { color: #788078; font-size: 11px; line-height: 1.8; }
+    .segmented { border: 1px solid #dcded7; border-radius: 7px; background: #eeede7; }
+    .segmented button { color: #69736b; font-size: 10px; }
+    .segmented button[aria-pressed="true"] { background: #fffefa; color: #245c4b; box-shadow: 0 1px 3px rgb(37 52 43 / 10%); }
+
+    .concept-grid { gap: 12px; }
+    .concept-card {
+      min-height: 196px;
+      border: 1px solid #e3e1d8;
+      border-radius: 9px;
+      background: #fffefa;
+      box-shadow: 0 7px 22px rgb(35 48 41 / 3%);
+    }
+    .concept-card:hover { border-color: #c8d3c9; }
+    .concept-card .index { color: #ad674d; font-size: 9px; letter-spacing: .13em; }
+    .concept-card h3 { color: #23342b; font: 650 21px/1.3 var(--sans); letter-spacing: -.035em; }
+    .concept-card p { color: #67736b; font-size: 12px; line-height: 1.8; }
+    .concept-card.wide { background: #f7f8f2; }
+    .upaya-list div { border-color: #e1e3d9; border-radius: 6px; background: #fffefa; }
+    .upaya-list b { color: #2c6550; font-size: 11px; }
+    .upaya-list span { color: #69736b; font-size: 10px; }
+
+    .practice-section { background: linear-gradient(180deg, #eeeee7, #f4f2eb 46%); }
+    .dashboard-top { grid-template-columns: 1fr 205px; gap: 12px; }
+    .progress-card, .streak-card {
+      border: 1px solid #dedfd6;
+      border-radius: 9px;
+      background: #fffefa;
+      box-shadow: 0 6px 20px rgb(35 48 41 / 3%);
+    }
+    .progress-card { padding: 18px 20px; }
+    .progress-line { font-size: 12px; }
+    .progress-line span:first-child { color: #536159; }
+    .progress-line span:last-child { color: #245c4b; }
+    .progress-track { height: 6px; background: #e7e8df; }
+    .progress-fill { background: linear-gradient(90deg, #bd6349, #36745d); }
+    .streak-card { gap: 12px; padding: 15px 18px; }
+    .streak-icon {
+      width: 39px;
+      border: 0;
+      border-radius: 10px;
+      background: #f7e9e1;
+      color: #b05b42;
+    }
+    .streak-icon svg { width: 21px; height: 21px; }
+    .streak-count { color: #245c4b; font: 700 30px/.95 var(--sans); }
+    .streak-card small { color: #737d75; }
+    .dashboard-actions { margin-bottom: 16px; }
+    .dashboard-actions .button { min-height: 33px; }
+    .phase-grid { gap: 13px; align-items: start; }
+    .phase-card {
+      padding: clamp(19px, 2.5vw, 26px);
+      border: 1px solid #dedfd6;
+      border-radius: 9px;
+      background: #fffefa;
+      box-shadow: 0 8px 24px rgb(35 48 41 / 4%);
+    }
+    .phase-card:nth-child(odd), .phase-card:nth-child(even) { border-top: 1px solid #dedfd6; }
+    .phase-card:nth-child(1) { border-top: 3px solid #36745d; }
+    .phase-card:nth-child(2) { border-top: 3px solid #bd6349; }
+    .phase-card:nth-child(3) { border-top: 3px solid #82956e; }
+    .phase-card:nth-child(4) { border-top: 3px solid #718a9a; }
+    .phase-head h3 { color: #25352c; font: 650 22px/1.3 var(--sans); letter-spacing: -.035em; }
+    .phase-time { border-color: #e1e2d9; border-radius: 4px; background: #f5f5ef; color: #67736b; font-size: 9px; }
+    .phase-intro { color: #68746c; font-size: 12px; line-height: 1.8; }
+    .field-label { color: #3e4c43; font-size: 11px; }
+    textarea, input[type="text"], .select-control {
+      border-color: #d8dbd2;
+      border-radius: 6px;
+      background: #fcfbf7;
+      color: #27342c;
+      font-size: 12px;
+    }
+    textarea::placeholder, input::placeholder { color: #959b91; }
+    textarea:focus, input[type="text"]:focus, .select-control:focus {
+      border-color: #6c987d;
+      box-shadow: 0 0 0 3px rgb(54 116 93 / 10%);
+    }
+    .saved-note { color: #858d84; font-size: 10px; }
+    .timer-box {
+      border: 1px solid #e1e4dc;
+      border-radius: 8px;
+      background: #f7f8f3;
+    }
+    .timer-display { color: #245c4b; font: 650 44px/.95 var(--sans); letter-spacing: -.055em; }
+    .timer-caption { color: #68746c; font-size: 11px; line-height: 1.7; }
+    .timer-caption strong { color: #354c3e; }
+    .timer-actions .button { min-height: 34px; font-size: 10px; }
+    .breath-orb {
+      border-color: #82a78d;
+      background: radial-gradient(circle, #e1eee1 0, #f7f8f3 72%);
+      color: #2d654f;
+    }
+    .breath-orb.inhale { box-shadow: 0 0 26px rgb(54 116 93 / 16%); }
+    .breath-orb.pause { box-shadow: 0 0 22px rgb(54 116 93 / 19%); }
+    .step {
+      border-color: #e0e2d9;
+      border-radius: 6px;
+      background: #fcfbf7;
+      color: #7a837b;
+    }
+    .step b { color: #536157; }
+    .step.active { border-color: #73a087; background: #edf4ed; color: #4a6554; }
+    .step.active b { color: #245c4b; }
+    .step.done { border-color: #c7d9ca; color: #588067; }
+    .step.done b { color: #3f7454; }
+    .select-control { background: #fcfbf7; }
+    .check-row {
+      border-color: #e2e2da;
+      border-radius: 6px;
+      background: #fcfbf7;
+    }
+    .check-row:hover { border-color: #bdcbbd; background: #f7f9f4; }
+    .check-row input { accent-color: #36745d; }
+    .check-row span { color: #48564c; font-size: 11px; }
+    .check-row small { color: #7a837c; font-size: 10px; }
+    .check-row:has(input:checked) { border-color: #b9d1be; background: #f0f6ef; }
+    .check-row:has(input:checked) span b { color: #2c674d; }
+    .phase-footer { color: #7a827a; font-size: 10px; line-height: 1.7; }
+    .notice {
+      border-left: 3px solid #789879;
+      background: #ebf1e8;
+      color: #5b695f;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .draw-card, .books-card {
+      border: 1px solid #dedfd6;
+      border-radius: 9px;
+      background-color: #fffefa;
+      box-shadow: 0 8px 24px rgb(35 48 41 / 4%);
+    }
+    .draw-card {
+      background:
+        radial-gradient(circle at 95% 10%, rgb(54 116 93 / 8%), transparent 14rem),
+        #fffefa;
+    }
+    .draw-card::after { border-color: rgb(54 116 93 / 13%); box-shadow: 0 0 0 22px rgb(54 116 93 / 3%), 0 0 0 48px rgb(54 116 93 / 2%); }
+    .dharana-number { color: #ad6147; font: 650 12px var(--sans); letter-spacing: .12em; }
+    .dharana-title { color: #24352b; font: 650 clamp(25px, 3vw, 34px)/1.25 var(--sans); letter-spacing: -.045em; }
+    .dharana-text { color: #617067; font-size: 13px; line-height: 1.8; }
+    .dharana-practice { border-top-color: #e1e3d9; color: #758077; font-size: 10px; line-height: 1.8; }
+    .books-card h3 { color: #26372e; font: 650 24px var(--sans); letter-spacing: -.035em; }
+    .book-list li { border-top-color: #e4e3db; }
+    .book-list b { color: #34443a; font-size: 12px; }
+    .book-list span { color: #737e75; font-size: 10px; line-height: 1.7; }
+    .source-note { color: #81877f; font-size: 9px; line-height: 1.8; }
+    footer { border-top-color: #e1dfd7; color: #777f77; }
+    .toast {
+      border-color: #d6ddd4;
+      border-radius: 8px;
+      background: #fffefa;
+      color: #2d3b32;
+      box-shadow: 0 12px 35px rgb(38 54 44 / 15%);
+    }
+
+    @media (max-width: 840px) {
+      .hero-grid { grid-template-columns: minmax(0, 1fr) 230px; }
+    }
+    @media (max-width: 740px) and (min-width: 641px) {
+      .phase-grid, .reading-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 36px, var(--content)); }
+      .hero-grid, .dashboard-top { grid-template-columns: 1fr; }
+      .hero-grid { gap: 25px; }
+      .nav {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0 10px;
+        padding-block: 11px 0;
+      }
+      .brand { gap: 8px; font-size: 10px; }
+      .brand-mark { width: 26px; }
+      .nav-cta { min-height: 34px; padding-inline: 9px; font-size: 9px; }
+      .nav-links {
+        width: 100%;
+        margin: 7px 0 0;
+        padding: 0;
+        gap: 22px;
+      }
+      .nav-links a { font-size: 11px; }
+      .hero { padding: 48px 0 54px; }
+      .hero::after { top: 17%; right: -48%; width: 280px; opacity: .6; }
+      .hero h1 { font-size: clamp(39px, 11vw, 54px); line-height: 1.12; }
+      .hero-copy { font-size: 13px; }
+      .hero-aside { padding: 18px 20px; }
+      .hero-aside .date-label { display: block; }
+      .hero-aside .stat { margin: 8px 12px 4px 0; font-size: 43px; }
+      .hero-aside .eyebrow { max-width: 150px; }
+      .hero-aside p { margin-top: 6px; }
+      .section { padding: 62px 0; }
+      .section-heading h2 { font-size: 31px; }
+      .compare-card { padding: 21px; }
+      .compare-card h3 { font-size: 22px; }
+      .concept-card, .concept-card.wide { padding: 20px; }
+      .phase-card { padding: 18px; }
+      .phase-head h3 { font-size: 20px; }
+      .draw-card, .books-card { padding: 20px; }
+    }
+
+    .brand-mark svg, .inline-icon, .sigil svg, .streak-icon svg {
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.7;
+    }
+    .phase-heading-title { display: flex; align-items: center; gap: 12px; }
+    .phase-mark {
+      display: grid;
+      flex: 0 0 38px;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 10px;
+    }
+    .phase-mark svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .green-mark { background: #e7f0e7; color: #38745e; }
+    .rust-mark { background: #f7e9e1; color: #b25d43; }
+    .sage-mark { background: #edf0e3; color: #758653; }
+    .blue-mark { background: #e9eff1; color: #607d8b; }
+    .icon-link { display: inline-flex; align-items: center; gap: 8px; }
+    .inline-icon { width: 15px; height: 15px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="#home" aria-label="Shakti Sovereign home">
+        <span class="brand-mark" aria-hidden="true"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 5.2c2.6 2 3.8 4.3 0 6.8-3.8-2.5-2.6-4.8 0-6.8Z"></path><path d="M5.2 12c2-2.6 4.3-3.8 6.8 0-2.5 3.8-4.8 2.6-6.8 0Z"></path><path d="M18.8 12c-2-2.6-4.3-3.8-6.8 0 2.5 3.8 4.8 2.6 6.8 0Z"></path><path d="M12 18.8c-2.6-2-3.8-4.3 0-6.8 3.8 2.5 2.6 4.8 0 6.8Z"></path></svg></span></span>
+        <span>SHAKTI <span class="gold">/</span> SOVEREIGN</span>
+      </a>
+      <div class="nav-links">
+        <a href="#paradigm">The Frame</a>
+        <a href="#philosophy">The System</a>
+        <a href="#practice">Daily Practice</a>
+        <a href="#library">The Library</a>
+      </div>
+      <a class="nav-cta icon-link" href="#practice">Enter the arena <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero wrap" id="home">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">A householder's operating system · Trika-informed</div>
+          <h1>Do not flee the fire.<br><em>Learn to wield it.</em></h1>
+          <p class="hero-copy">
+            A daily discipline for people building consequential lives. In Kashmir Shaivism, awareness is not diminished by action: <strong>the world is where recognition is tested.</strong> Train attention, meet desire without being ruled by it, and turn insight into deliberate action.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary icon-link" href="#practice">Begin today's practice <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M6 13l6 6 6-6"></path></svg></a>
+            <a class="button subtle" href="#philosophy">Read the operating system</a>
+          </div>
+        </div>
+        <aside class="hero-aside" aria-label="Today's daily practice status">
+          <span class="date-label muted" id="today-label">Today</span>
+          <span class="stat" id="hero-progress">0%</span>
+          <span class="eyebrow">Attention made actionable</span>
+          <p>Presence is not an excuse to drift. It is the capacity to choose your next move without confusion.</p>
+        </aside>
+      </div>
+      <p class="rule-note">A demanding frame, not a doctrine of blame: constraints, trauma, and material conditions are real. Agency means working with what is here—not pretending every outcome is under individual control.</p>
+    </section>
+
+    <section class="section paradigm" id="paradigm">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">01 / The winner box</div>
+            <h2>Two ways to meet desire.</h2>
+          </div>
+          <div class="segmented" role="group" aria-label="Comparison display">
+            <button type="button" data-view="both" aria-pressed="true">Both lenses</button>
+            <button type="button" data-view="ascetic" aria-pressed="false">Renunciation</button>
+            <button type="button" data-view="tantric" aria-pressed="false">Sovereignty</button>
+          </div>
+        </div>
+        <div class="comparison" id="comparison">
+          <article class="compare-card ascetic" data-lens="ascetic">
+            <span class="pill">THE RENUNCIATE LENS</span>
+            <h3>Withdrawal from the world</h3>
+            <blockquote>“Desire is the root cause of all suffering.”</blockquote>
+            <p>In this simplified contrast, freedom is pursued by reducing attachment: withdraw, restrain, and loosen the grip of wanting. That discipline can be profound; it becomes limiting when every form of worldly energy is treated as a threat.</p>
+          </article>
+          <article class="compare-card sovereign" data-lens="tantric">
+            <span class="pill">THE TANTRIC SOVEREIGN LENS</span>
+            <h3>Engagement without bondage</h3>
+            <blockquote>“Desire is the root cause of all greatness.”</blockquote>
+            <p>Desire can supply direction, vitality, and creative force. The work is neither indulgence nor suppression: recognize its energy, discern its aim, and act without handing it the steering wheel.</p>
+          </article>
+        </div>
+        <div class="paradigm-foot">
+          <span class="sigil" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M7 7c1.2 2 2.8 3 5 3s3.8-1 5-3M5 11c1.6 2.1 3.9 3.2 7 3.2s5.4-1.1 7-3.2M8 20l4-5.8 4 5.8"></path></svg></span>
+          <p><strong>Why Tantra belongs in this conversation:</strong> Trika understands manifestation as the free expression of consciousness—Shakti, not a fall from the sacred. Practice is recognition in the midst of life, not a plea to a distant power. That does not make every impulse wise, or worldly success a measure of realization. Power without discernment is just compulsion with better branding.</p>
+        </div>
+        <p class="principle-note">“Master / slave morality” is a polemical modern lens, not Trika terminology or a neutral account of all renunciate traditions. The contrast here is about practice orientation—not a claim that one community is morally superior.</p>
+      </div>
+    </section>
+
+    <section class="section" id="philosophy">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">02 / The core philosophy</div>
+            <h2>The operating system.</h2>
+          </div>
+          <p>Not a self-improvement mythology. A concise map of recognition, attention, and embodied freedom in the non-dual Trika tradition.</p>
+        </div>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <span class="index">01 — SOVEREIGN FREEDOM</span>
+            <h3>Svātantrya</h3>
+            <p>Consciousness is radically free to manifest experience. As practice, this points toward participation and response—not the fantasy that an individual ego controls every event.</p>
+          </article>
+          <article class="concept-card">
+            <span class="index">02 — RECOGNITION</span>
+            <h3>Pratyabhijñā</h3>
+            <p>Recognition is not repairing a fundamentally broken self. It is the recovery of what has been overlooked: awareness already present within every experience.</p>
+          </article>
+          <article class="concept-card">
+            <span class="index">03 — STILLNESS / FORCE</span>
+            <h3>Śiva &amp; Śakti</h3>
+            <p>Śiva names awareness; Śakti its inseparable power of knowing and manifesting. Stillness and intensity are not enemies to be split apart.</p>
+          </article>
+          <article class="concept-card">
+            <span class="index">04 — ENJOYMENT / FREEDOM</span>
+            <h3>Bhoga &amp; mokṣa</h3>
+            <p>Enjoyment and liberation need not be mutually exclusive. The question is whether experience is met with recognition—or whether grasping and avoidance dictate the terms.</p>
+          </article>
+          <article class="concept-card wide">
+            <span class="index">05 — METHODS ARE MEANS, NOT BADGES</span>
+            <h3>The four upāyas</h3>
+            <p>Trika presents graded means of recognition. They are maps of approach, not a required checklist of religious compliance. Mantra and ritual can focus attention; they are not prerequisites for every practitioner.</p>
+            <div class="upaya-list">
+              <div><b>Āṇavopāya</b><span>Embodied methods: breath, mantra, visualization, ritual.</span></div>
+              <div><b>Śāktopāya</b><span>Refining attention and the movement of thought.</span></div>
+              <div><b>Śāmbhavopāya</b><span>Direct orientation through will and undivided awareness.</span></div>
+              <div><b>Anupāya</b><span>“No-method”: immediate recognition, not a technique to force.</span></div>
+            </div>
+            <p class="principle-note">“Śivoham” and “So’ham” may serve as contemplative cues when used meaningfully; they are optional tools, not magic passwords.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section practice-section" id="practice">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">03 / Interactive daily ritual</div>
+            <h2>Today's training plan.</h2>
+          </div>
+          <p>Small, repeatable attentional reps. Your notes and checkmarks stay in this browser; no account or server is involved.</p>
+        </div>
+        <div class="dashboard-top">
+          <div class="progress-card">
+            <div class="progress-line"><span>Daily completion</span><span id="progress-label">0 / 8 complete</span></div>
+            <div class="progress-track" role="progressbar" aria-label="Daily practice completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressbar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+          <div class="streak-card">
+            <span class="streak-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12.5 3.5c.8 3.2-1.8 4.3-1.2 7 .3 1.1 1.2 1.8 2.3 2.1.1-1.7 1.2-2.8 2.2-3.5 1.8 2.1 2.7 4.1 2.7 6.2a6.5 6.5 0 0 1-13 0c0-3.3 2.2-6.2 5.1-8.8-.1 2.2.3 3.2 1.1 4"></path></svg></span>
+            <div><span class="streak-count" id="streak-count">0</span><small>day completion streak</small></div>
+          </div>
+        </div>
+        <div class="dashboard-actions">
+          <button type="button" class="button danger" id="reset-day">Reset today</button>
+        </div>
+
+        <div class="phase-grid">
+          <article class="phase-card">
+            <div class="phase-head">
+              <div class="phase-heading-title"><span class="phase-mark green-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 18h18M5 18a7 7 0 0 1 14 0M12 11V5M9 8l3-3 3 3"></path></svg></span><div><div class="eyebrow">Phase 01 / Morning calibration</div><h3>Set the vector.</h3></div></div>
+              <span class="phase-time">3–5 MIN</span>
+            </div>
+            <p class="phase-intro">Name the move that matters. Make it concrete enough to act on before the day gets loud.</p>
+            <label class="field-label" for="sankalpa">Sankalpa · sovereign frame</label>
+            <textarea id="sankalpa" placeholder="Today, I will direct my attention toward…"></textarea>
+            <p class="saved-note" id="sankalpa-status" aria-live="polite">Saved automatically on this device.</p>
+            <label class="check-row"><input type="checkbox" data-check="sankalpa"><span><b>Sankalpa written</b><small>One meaningful intention, expressed as an actionable choice.</small></span></label>
+            <div class="timer-box">
+              <div class="eyebrow">Madhya · the interval</div>
+              <div class="timer-display" id="breath-time" aria-live="off">03:00</div>
+              <div class="timer-caption" id="breath-caption" aria-live="polite">Attend to the turning point between breaths.</div>
+              <div class="breath-orb" id="breath-orb" aria-hidden="true">Ready</div>
+              <div class="timer-actions">
+                <button type="button" class="button primary" data-timer="breath">Start 3 minutes</button>
+                <button type="button" class="button subtle" data-stop="breath">Stop</button>
+              </div>
+            </div>
+            <label class="check-row"><input type="checkbox" data-check="morning"><span><b>Morning calibration complete</b><small>Sankalpa set; breath practice finished.</small></span></label>
+            <p class="phase-footer">Breath-gap practice appears around Vijñāna Bhairava 24–27 in common numbering; confirm against your edition. No breath hold is required.</p>
+          </article>
+
+          <article class="phase-card">
+            <div class="phase-head">
+              <div class="phase-heading-title"><span class="phase-mark rust-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path></svg></span><div><div class="eyebrow">Phase 02 / Workday arena</div><h3>Interrupt the autopilot.</h3></div></div>
+              <span class="phase-time">AS NEEDED</span>
+            </div>
+            <p class="phase-intro">A brief attentional reset is not an escape from work. It is a way back to the full field before choosing what to do.</p>
+            <div class="timer-box">
+              <div class="eyebrow">Panoramic gaze · micro-reset</div>
+              <div class="timer-display" id="gaze-time">00:15</div>
+              <div class="timer-caption" id="gaze-caption">Soften focus; include the edges of the visual field.</div>
+              <div class="timer-actions">
+                <button type="button" class="button primary" data-timer="gaze">Start 15 seconds</button>
+                <button type="button" class="button subtle" data-stop="gaze">Stop</button>
+              </div>
+            </div>
+            <label class="check-row"><input type="checkbox" data-check="gaze"><span><b>Panoramic reset practiced</b><small>Widen attention; return to one deliberate next step.</small></span></label>
+            <div class="timer-box">
+              <div class="eyebrow">High-voltage emotion alchemy</div>
+              <div class="timer-display" id="alchemy-time">01:30</div>
+              <div class="timer-caption" id="alchemy-caption">Feel the energy before you obey the story.</div>
+              <div class="steps" aria-label="Emotion practice stages">
+                <div class="step" data-stage="0"><b>01 · Freeze</b>Interrupt the reflex.</div>
+                <div class="step" data-stage="1"><b>02 · Mute</b>Pause the story.</div>
+                <div class="step" data-stage="2"><b>03 · Feel</b>Track raw sensation.</div>
+                <div class="step" data-stage="3"><b>04 · Redirect</b>Choose clear action.</div>
+              </div>
+              <div class="timer-actions">
+                <button type="button" class="button primary" data-timer="alchemy">Start 90 seconds</button>
+                <button type="button" class="button subtle" data-stop="alchemy">Stop</button>
+              </div>
+            </div>
+            <label class="field-label" for="trigger-kind">Trigger</label>
+            <div class="log-row">
+              <select class="select-control" id="trigger-kind" aria-label="Trigger type">
+                <option value="">Choose one</option><option>Anger</option><option>Fear</option><option>Desire</option><option>Other</option>
+              </select>
+              <input type="text" id="trigger-note" placeholder="What changed when you felt before reacting?">
+            </div>
+            <p class="saved-note" id="trigger-status" aria-live="polite">Log saves automatically on this device.</p>
+            <label class="check-row"><input type="checkbox" data-check="alchemy"><span><b>Emotion practice and log complete</b><small>Record the energy's redirection, however small.</small></span></label>
+            <p class="phase-footer">The wide-gaze reset is a VBT-inspired adaptation, not a verified verse 115 mapping. Verse 101 is associated with intense sensation in some numbering; “alchemy” is a modern framing, not a therapeutic claim. If overwhelmed, stop and orient to your surroundings.</p>
+          </article>
+
+          <article class="phase-card">
+            <div class="phase-head">
+              <div class="phase-heading-title"><span class="phase-mark sage-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg></span><div><div class="eyebrow">Phase 03 / Evening sensory immersion</div><h3>Receive the ordinary.</h3></div></div>
+              <span class="phase-time">ONE MEAL / MOMENT</span>
+            </div>
+            <p class="phase-intro">Choose one screen-free interval. Presence is specific: taste the food, hear the phrase, notice the person in front of you.</p>
+            <div class="check-list">
+              <label class="check-row"><input type="checkbox" data-check="rasa-meal"><span><b>Meal without a screen</b><small>Taste, temperature, texture; no parallel feed.</small></span></label>
+              <label class="check-row"><input type="checkbox" data-check="rasa-sound"><span><b>Listen to one thing fully</b><small>Music, silence, or another person—without multitasking.</small></span></label>
+              <label class="check-row"><input type="checkbox" data-check="rasa-relationship"><span><b>Offer undivided attention</b><small>One conversation or shared moment, screen out of reach.</small></span></label>
+            </div>
+            <label class="field-label" for="rasa-note" style="margin-top:16px">What did you actually notice?</label>
+            <textarea id="rasa-note" placeholder="One sensory detail, not a performance review."></textarea>
+            <p class="saved-note" id="rasa-status" aria-live="polite">Saved automatically on this device.</p>
+          </article>
+
+          <article class="phase-card">
+            <div class="phase-head">
+              <div class="phase-heading-title"><span class="phase-mark blue-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 15.5A8 8 0 0 1 8.5 4.5a8.5 8.5 0 1 0 11 11Z"></path><path d="M17 4v4M15 6h4"></path></svg></span><div><div class="eyebrow">Phase 04 / Night decompression</div><h3>Close the loop.</h3></div></div>
+              <span class="phase-time">2 MIN</span>
+            </div>
+            <p class="phase-intro">Review the day in reverse, without litigating it. Let each scene release; finish with the body as open space.</p>
+            <div class="timer-box">
+              <div class="eyebrow">Reverse-day movie review</div>
+              <div class="timer-display" id="night-time">02:00</div>
+              <div class="timer-caption" id="night-caption">Start at this moment; move backward through the day.</div>
+              <div class="timer-actions">
+                <button type="button" class="button primary" data-timer="night">Start 2 minutes</button>
+                <button type="button" class="button subtle" data-stop="night">Stop</button>
+              </div>
+            </div>
+            <div class="review-prompt">
+              <label for="night-review">What scene deserves a second look?
+                <textarea id="night-review" placeholder="Observe; don't prosecute."></textarea>
+              </label>
+              <label for="night-sky">Body as empty sky
+                <textarea id="night-sky" placeholder="Where can sensation be allowed to move?"></textarea>
+              </label>
+            </div>
+            <p class="saved-note" id="night-status" aria-live="polite">Saved automatically on this device.</p>
+            <label class="check-row"><input type="checkbox" data-check="night"><span><b>Reverse review and body check-in complete</b><small>Let the day be seen; release the demand to solve it now.</small></span></label>
+            <p class="phase-footer">Body-as-space is a VBT practice; Wallis groups a related contemplation at stanza 48, so verse 43 is not a universal mapping. Verify your edition. This is a contemplative image, not a medical claim.</p>
+          </article>
+        </div>
+        <p class="notice">Practice note: the timer pacing is a gentle attentional scaffold, not breath-holding instruction. Breathe naturally; stop if you feel dizzy, panicked, or physically uncomfortable. Timer and practice notes persist only in this browser's local storage.</p>
+      </div>
+    </section>
+
+    <section class="section" id="library">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">04 / Reading room</div>
+            <h2>Study. Then test it.</h2>
+          </div>
+          <p>Primary texts reward careful reading. Translations and verse numbering differ; use a consistent edition when following a specific practice instruction.</p>
+        </div>
+        <div class="reading-grid">
+          <article class="draw-card">
+            <div class="draw-head">
+              <span class="eyebrow">Draw today's dhāraṇā</span>
+              <button type="button" class="button subtle icon-link" id="shuffle-dharana">Shuffle <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"></path><path d="M5.8 9A7 7 0 0 1 18 7l2 2M4 15l2 2a7 7 0 0 0 12.2-2"></path></svg></button>
+            </div>
+            <div class="dharana-number" id="dharana-number">Practice 01</div>
+            <h3 class="dharana-title" id="dharana-title">The interval between breaths</h3>
+            <p class="dharana-text" id="dharana-text">Notice the natural turning point between exhalation and inhalation. Let attention rest there without forcing a pause or changing the breath.</p>
+            <div class="dharana-practice" id="dharana-practice">Try it: 5 relaxed breaths. Stop if the exercise creates strain. Breath practices appear around VBT 24–27 in common numbering; verify your translation.</div>
+          </article>
+          <aside class="books-card">
+            <h3>Essential shelf</h3>
+            <ul class="book-list">
+              <li><b>Jaideva Singh · <i>Śiva Sūtras</i></b><span>A compact primary-source doorway with translation and commentary.</span></li>
+              <li><b>Jaideva Singh · <i>Vijñānabhairava or Divine Consciousness</i></b><span>Translation and exposition of the contemplative dialogue.</span></li>
+              <li><b>Swami Lakshmanjoo · <i>Kashmir Shaivism: The Secret Supreme</i></b><span>A practitioner-teacher's exposition of the tradition.</span></li>
+              <li><b>Christopher D. Wallis · <i>The Recognition Sutras</i></b><span>A contemporary introduction to Pratyabhijñā philosophy.</span></li>
+              <li><b>Lorin Roche · <i>The Radiance Sutras</i></b><span>A poetic, contemporary rendering inspired by the Vijñāna Bhairava; read alongside a more literal translation.</span></li>
+            </ul>
+            <p class="source-note">The VBT is commonly described as 112 dhāraṇās across 163 stanzas; practice counts and stanza numbers are not interchangeable. This draw deck offers ten VBT-inspired prompts, not quotations or a verse concordance. Breath-gap methods appear around 24–27 in common numbering; body-as-space is grouped at stanza 48 in Wallis's numbering. The wide-gaze reset is an adaptation, not a verified verse 115 attribution. Use one consistent edition; compare Jaideva Singh's numbering with Wallis's discussion before treating a stanza number as definitive.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-row">
+      <span>SHAKTI / SOVEREIGN · A daily practice portal</span>
+      <span>Built for attention, not performance. Your browser. Your data.</span>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      // Practice records are versioned and stored only in this browser.
+      const STORAGE_KEY = "shakti-sovereign.v1";
+      const CHECK_IDS = ["sankalpa", "morning", "gaze", "alchemy", "rasa-meal", "rasa-sound", "rasa-relationship", "night"];
+      const TOTAL_CHECKS = CHECK_IDS.length;
+      const timerDefinitions = {
+        breath: { duration: 180, display: "breath-time", caption: "breath-caption" },
+        gaze: { duration: 15, display: "gaze-time", caption: "gaze-caption" },
+        alchemy: { duration: 90, display: "alchemy-time", caption: "alchemy-caption" },
+        night: { duration: 120, display: "night-time", caption: "night-caption" }
+      };
+      const stageBoundaries = [0, 10, 25, 60, 90];
+      const dharanas = [
+        { n: "Practice 01", title: "The interval between breaths", text: "Notice the natural turning point between exhalation and inhalation. Let attention rest there without forcing a pause or changing the breath.", practice: "Try it: 5 relaxed breaths. Stop if the exercise creates strain. Breath practices appear around VBT 24–27 in common numbering; verify your translation." },
+        { n: "Practice 02", title: "The body as open space", text: "Sense the body's boundaries, then imagine space within and around the body as one continuous field of awareness.", practice: "Try it: sit comfortably for 60 seconds. Keep ordinary bodily sensation in view. A related contemplation is stanza 48 in Wallis's numbering; verify your edition." },
+        { n: "Practice 03", title: "Widen the visual field", text: "Keep the gaze soft. Include peripheral vision and the wider visual scene without fixing on a single object.", practice: "Try it: 15 seconds at a window or across a room. Remain alert to your surroundings. This is a VBT-inspired adaptation, not a verified attribution to verse 115." },
+        { n: "Practice 04", title: "Meet the charge before the story", text: "When a strong emotion appears, pause the rehearsed explanation long enough to feel its immediate bodily texture.", practice: "Try it: name one sensation and one next action. Do not suppress the emotion or act it out. Verse 101 is associated with intense sensation in some numbering; verify your translation." },
+        { n: "Practice 05", title: "Listen through the sound", text: "Attend to a sound as it begins, changes, and fades. Notice awareness in the hearing, not only the sound's label.", practice: "Try it with a bell, music, or ordinary room tone. No special sound is required." },
+        { n: "Practice 06", title: "The first instant of contact", text: "Notice the first moment of seeing, hearing, or touching before the mind completes its usual commentary.", practice: "Try it with a familiar object. Stay curious rather than trying to manufacture a blank mind." },
+        { n: "Practice 07", title: "Trace the breath's turning", text: "Follow a natural breath to its change of direction. Attend to the transition without lengthening or holding the breath.", practice: "Try it for one minute. If attention creates strain, return to normal breathing." },
+        { n: "Practice 08", title: "Let sensation move", text: "Choose a neutral bodily sensation. Observe its changing texture without immediately naming it good, bad, or in need of fixing.", practice: "Try it for a few breaths. This is observation—not a substitute for medical care." },
+        { n: "Practice 09", title: "Rest after the exhale", text: "Notice whether a quiet interval naturally appears after exhalation. Let it be present; do not extend it.", practice: "Try it for five comfortable breaths, then stop. No breath retention is needed." },
+        { n: "Practice 10", title: "Recognize the knower", text: "In the middle of an ordinary perception, turn briefly toward the fact of knowing itself—without needing to describe it.", practice: "Try it during a routine task, then return to the task with full attention." }
+      ];
+
+      // Keep history by local calendar day; today's record is created on demand.
+      const todayKey = () => {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      };
+      const newDay = () => ({
+        checks: {},
+        sankalpa: "",
+        triggerKind: "",
+        triggerNote: "",
+        rasaNote: "",
+        nightReview: "",
+        nightSky: ""
+      });
+      let state;
+      let activeTimer = null;
+      let intervalId = null;
+      let toastTimeout = null;
+      const saveTimeouts = new Map();
+      let renderedDate = todayKey();
+
+      function loadState() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+          if (!stored || typeof stored !== "object" || Array.isArray(stored)) throw new Error("Stored practice data has an invalid shape.");
+          if (!stored.days || typeof stored.days !== "object" || Array.isArray(stored.days)) stored.days = {};
+          const currentDay = stored.days[todayKey()];
+          if (!currentDay || typeof currentDay !== "object" || Array.isArray(currentDay)) {
+            stored.days[todayKey()] = newDay();
+          } else {
+            stored.days[todayKey()] = {
+              ...newDay(),
+              ...currentDay,
+              checks: currentDay.checks && typeof currentDay.checks === "object" && !Array.isArray(currentDay.checks)
+                ? currentDay.checks
+                : {}
+            };
+          }
+          return stored;
+        } catch (error) {
+          if (error instanceof SyntaxError) {
+            showToast("Saved data could not be read. Starting a fresh day; existing storage was left untouched.");
+            return { days: { [todayKey()]: newDay() } };
+          }
+          if (error instanceof Error && error.message.includes("invalid shape")) {
+            showToast("Saved data has an unexpected format. Starting a fresh day; existing storage was left untouched.");
+            return { days: { [todayKey()]: newDay() } };
+          }
+          throw error;
+        }
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (error) {
+          console.error("Could not save practice data to local storage.", error);
+          showToast("Could not save locally. Check this browser's storage settings.");
+        }
+      }
+
+      function dayData() {
+        if (!state.days[todayKey()]) state.days[todayKey()] = newDay();
+        return state.days[todayKey()];
+      }
+
+      function completionCount(day) {
+        return CHECK_IDS.filter(id => Boolean(day.checks && day.checks[id])).length;
+      }
+
+      function streakCount() {
+        const days = state.days || {};
+        let count = 0;
+        const cursor = new Date();
+        const todayComplete = completionCount(days[todayKey()] || newDay()) === TOTAL_CHECKS;
+        if (!todayComplete) cursor.setDate(cursor.getDate() - 1);
+        while (true) {
+          const key = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, "0")}-${String(cursor.getDate()).padStart(2, "0")}`;
+          if (completionCount(days[key] || newDay()) !== TOTAL_CHECKS) break;
+          count++;
+          cursor.setDate(cursor.getDate() - 1);
+        }
+        return count;
+      }
+
+      function renderDashboard() {
+        const day = dayData();
+        document.querySelectorAll("[data-check]").forEach(input => {
+          input.checked = Boolean(day.checks[input.dataset.check]);
+        });
+        const count = completionCount(day);
+        const percent = Math.round(count / TOTAL_CHECKS * 100);
+        document.getElementById("progress-label").textContent = `${count} / ${TOTAL_CHECKS} complete`;
+        document.getElementById("progress-fill").style.width = `${percent}%`;
+        document.getElementById("progressbar").setAttribute("aria-valuenow", String(percent));
+        document.getElementById("hero-progress").textContent = `${percent}%`;
+        document.getElementById("streak-count").textContent = String(streakCount());
+        document.getElementById("today-label").textContent = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "long", day: "numeric" }).format(new Date());
+      }
+
+      function refreshForDateChange() {
+        const currentDate = todayKey();
+        if (currentDate === renderedDate) return;
+        renderedDate = currentDate;
+        if (activeTimer) stopTimer(activeTimer.name);
+        syncInputs();
+        renderDashboard();
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove("show"), 3200);
+      }
+
+      function writeAndRender() {
+        saveState();
+        renderDashboard();
+      }
+
+      function syncInputs() {
+        const day = dayData();
+        document.getElementById("sankalpa").value = day.sankalpa || "";
+        document.getElementById("trigger-kind").value = day.triggerKind || "";
+        document.getElementById("trigger-note").value = day.triggerNote || "";
+        document.getElementById("rasa-note").value = day.rasaNote || "";
+        document.getElementById("night-review").value = day.nightReview || "";
+        document.getElementById("night-sky").value = day.nightSky || "";
+      }
+
+      function saveTextField(field, value, statusId) {
+        dayData()[field] = value;
+        const status = document.getElementById(statusId);
+        if (status) status.textContent = "Saving…";
+        clearTimeout(saveTimeouts.get(statusId));
+        saveTimeouts.set(statusId, setTimeout(() => {
+          saveState();
+          if (status) status.textContent = `Saved at ${new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" }).format(new Date())}.`;
+          saveTimeouts.delete(statusId);
+        }, 250));
+      }
+
+      function timerElements(name) {
+        const definition = timerDefinitions[name];
+        return { display: document.getElementById(definition.display), caption: document.getElementById(definition.caption) };
+      }
+
+      function formatTime(seconds) {
+        const safeSeconds = Math.max(0, Math.ceil(seconds));
+        return `${String(Math.floor(safeSeconds / 60)).padStart(2, "0")}:${String(safeSeconds % 60).padStart(2, "0")}`;
+      }
+
+      function stageFor(elapsed) {
+        for (let i = 0; i < stageBoundaries.length - 1; i++) {
+          if (elapsed < stageBoundaries[i + 1]) return i;
+        }
+        return stageBoundaries.length - 2;
+      }
+
+      function updateAlchemy(elapsed) {
+        const captions = [
+          "Freeze. Interrupt the reflex; feel your feet and look around.",
+          "Mute the mental story. Label the interpretation; do not rehearse it.",
+          "Feel raw physical spanda: pressure, heat, pulse, movement—without acting it out.",
+          "Redirect into one clear, proportionate action."
+        ];
+        const current = stageFor(elapsed);
+        document.getElementById("alchemy-caption").textContent = captions[current];
+        document.querySelectorAll("[data-stage]").forEach((el, index) => {
+          el.classList.toggle("active", index === current);
+          el.classList.toggle("done", index < current);
+        });
+      }
+
+      function updateBreath(elapsed) {
+        const phase = elapsed % 12;
+        const caption = document.getElementById("breath-caption");
+        const orb = document.getElementById("breath-orb");
+        if (phase < 4) {
+          caption.innerHTML = "<strong>Inhale gently.</strong> Let the breath arrive without strain.";
+          orb.textContent = "Inhale";
+          orb.className = "breath-orb inhale";
+        } else if (phase < 6) {
+          caption.innerHTML = "<strong>Top of inhale.</strong> Notice the turning point; no forced hold.";
+          orb.textContent = "Madhya";
+          orb.className = "breath-orb pause";
+        } else if (phase < 10) {
+          caption.innerHTML = "<strong>Exhale gently.</strong> Let the breath leave at its natural pace.";
+          orb.textContent = "Exhale";
+          orb.className = "breath-orb exhale";
+        } else {
+          caption.innerHTML = "<strong>Bottom of exhale.</strong> Notice the interval; let the next breath come.";
+          orb.textContent = "Madhya";
+          orb.className = "breath-orb pause";
+        }
+      }
+
+      // Derive elapsed time from the clock so background-tab throttling cannot skew a timer.
+      function timerTick() {
+        if (!activeTimer) return;
+        const elapsed = Math.floor((Date.now() - activeTimer.startedAt) / 1000);
+        const remaining = Math.max(0, activeTimer.duration - elapsed);
+        const { display, caption } = timerElements(activeTimer.name);
+        display.textContent = formatTime(remaining);
+        if (activeTimer.name === "breath") updateBreath(elapsed);
+        if (activeTimer.name === "alchemy") updateAlchemy(elapsed);
+        if (remaining === 0) finishTimer();
+      }
+
+      function startTimer(name) {
+        if (activeTimer) stopTimer(activeTimer.name);
+        const definition = timerDefinitions[name];
+        activeTimer = { name, duration: definition.duration, startedAt: Date.now() };
+        const { caption } = timerElements(name);
+        if (name === "breath") updateBreath(0);
+        if (name === "alchemy") updateAlchemy(0);
+        if (name === "gaze") caption.textContent = "Widen attention. Include the edges of the visual field.";
+        if (name === "night") caption.textContent = "Start at this moment; move backward through the day.";
+        timerTick();
+        intervalId = setInterval(timerTick, 200);
+      }
+
+      function resetTimerDisplay(name) {
+        const { display, caption } = timerElements(name);
+        display.textContent = formatTime(timerDefinitions[name].duration);
+        if (name === "breath") {
+          caption.textContent = "Attend to the turning point between breaths.";
+          const orb = document.getElementById("breath-orb");
+          orb.textContent = "Ready";
+          orb.className = "breath-orb";
+        } else if (name === "gaze") caption.textContent = "Soften focus; include the edges of the visual field.";
+        else if (name === "alchemy") {
+          caption.textContent = "Feel the energy before you obey the story.";
+          document.querySelectorAll("[data-stage]").forEach(el => el.classList.remove("active", "done"));
+        } else caption.textContent = "Start at this moment; move backward through the day.";
+      }
+
+      function stopTimer(name, reset = true) {
+        if (!activeTimer || activeTimer.name !== name) {
+          if (reset) resetTimerDisplay(name);
+          return;
+        }
+        clearInterval(intervalId);
+        intervalId = null;
+        activeTimer = null;
+        if (reset) resetTimerDisplay(name);
+      }
+
+      function finishTimer() {
+        const name = activeTimer.name;
+        clearInterval(intervalId);
+        intervalId = null;
+        activeTimer = null;
+        const { display, caption } = timerElements(name);
+        display.textContent = "00:00";
+        caption.textContent = name === "alchemy"
+          ? "Choose one clear next action. Log what changed, even if the answer is 'nothing yet'."
+          : name === "breath"
+            ? "Three minutes complete. Return to the day without rushing."
+            : name === "gaze"
+              ? "Reset complete. Choose one deliberate next move."
+              : "Review complete. Let the day end here.";
+        if (name === "breath") {
+          const orb = document.getElementById("breath-orb");
+          orb.textContent = "Complete";
+          orb.className = "breath-orb";
+        }
+        if (name === "alchemy") document.querySelectorAll("[data-stage]").forEach(el => { el.classList.remove("active"); el.classList.add("done"); });
+        showToast("Practice timer complete.");
+      }
+
+      document.querySelectorAll("[data-check]").forEach(input => {
+        input.addEventListener("change", () => {
+          dayData().checks[input.dataset.check] = input.checked;
+          writeAndRender();
+        });
+      });
+
+      document.getElementById("sankalpa").addEventListener("input", event => saveTextField("sankalpa", event.target.value, "sankalpa-status"));
+      document.getElementById("trigger-kind").addEventListener("change", event => saveTextField("triggerKind", event.target.value, "trigger-status"));
+      document.getElementById("trigger-note").addEventListener("input", event => saveTextField("triggerNote", event.target.value, "trigger-status"));
+      document.getElementById("rasa-note").addEventListener("input", event => saveTextField("rasaNote", event.target.value, "rasa-status"));
+      document.getElementById("night-review").addEventListener("input", event => saveTextField("nightReview", event.target.value, "night-status"));
+      document.getElementById("night-sky").addEventListener("input", event => saveTextField("nightSky", event.target.value, "night-status"));
+
+      document.querySelectorAll("[data-timer]").forEach(button => button.addEventListener("click", () => startTimer(button.dataset.timer)));
+      document.querySelectorAll("[data-stop]").forEach(button => button.addEventListener("click", () => stopTimer(button.dataset.stop)));
+
+      document.getElementById("reset-day").addEventListener("click", () => {
+        if (!window.confirm("Reset today's checkmarks and notes? This cannot be undone. Your previous days will remain saved.")) return;
+        stopTimer(activeTimer && activeTimer.name, false);
+        state.days[todayKey()] = newDay();
+        saveState();
+        syncInputs();
+        renderDashboard();
+        ["breath", "gaze", "alchemy", "night"].forEach(resetTimerDisplay);
+        showToast("Today's practice has been reset.");
+      });
+
+      document.querySelectorAll("[data-view]").forEach(button => {
+        button.addEventListener("click", () => {
+          const view = button.dataset.view;
+          document.querySelectorAll("[data-view]").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+          document.querySelectorAll("[data-lens]").forEach(card => {
+            card.hidden = view !== "both" && card.dataset.lens !== view;
+          });
+        });
+      });
+
+      setInterval(refreshForDateChange, 30_000);
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) refreshForDateChange();
+      });
+
+      let lastDharana = -1;
+      document.getElementById("shuffle-dharana").addEventListener("click", () => {
+        let next;
+        do { next = Math.floor(Math.random() * dharanas.length); } while (next === lastDharana);
+        lastDharana = next;
+        const dharana = dharanas[next];
+        document.getElementById("dharana-number").textContent = dharana.n;
+        document.getElementById("dharana-title").textContent = dharana.title;
+        document.getElementById("dharana-text").textContent = dharana.text;
+        document.getElementById("dharana-practice").textContent = dharana.practice;
+      });
+
+      try {
+        state = loadState();
+        syncInputs();
+        renderDashboard();
+      } catch (error) {
+        console.error("Could not initialize the practice tracker.", error);
+        showToast("Practice storage is unavailable. Your changes may not persist in this browser.");
+        state = { days: { [todayKey()]: newDay() } };
+        syncInputs();
+        renderDashboard();
+      }
+    })();
+  </script>
+</body>
+</html>
